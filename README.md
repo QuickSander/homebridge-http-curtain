@@ -154,3 +154,4 @@ To get more details about the configuration have a look at the
 Down here are all characteristics listed which can be updated with an request to the `homebridge-http-notification-server`
 
 * `characteristic` "CurrentPosition": expects an integer `value` in a range of 0 up to and including 100.
+
