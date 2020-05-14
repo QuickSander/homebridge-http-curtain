@@ -2,7 +2,7 @@
 	"pluginAlias": "HttpCurtain",
 	"pluginType": "accessory",
 	"singular": false,
-	"headerDisplay": "Integrate HTTP based curtain controllers. Supports push notifications via [homebridge-http-notification-server](https://github.com/Supereg/homebridge-http-notification-server).",
+	"headerDisplay": "Integrate HTTP based curtain controllers. Supports push notifications via [homebridge-http-notification-server](https://github.com/Supereg/homebridge-http-notification-server). Edit config file directly for advanced URL control.",
 	"footerDisplay": "",
 	"schema": {
 		"type": "object",
@@ -43,6 +43,10 @@
 						"typeahead": { "source": [ 
 							"GET", "PUT", "POST", "DELETE", "HEAD"
 						]}
+					},
+					"body": {
+						"type": "string",
+						"required": false
 					}
 				}
 			},
@@ -53,8 +57,8 @@
 					"url": {
 						"type": "string",
 						"title": "URL",
+						"description": "Not used by Home app, but here for HomeKit completess.",
 						"required": false,
-						"default": "http://my-curtain.local/api/v1/state",
 						"format": "uri"
 					},
 					"method": {
@@ -74,8 +78,50 @@
 					"url": {
 						"type": "string",
 						"title": "URL",
+						"description": "%d gets replaced by integer between 0-100.",
 						"required": false,
 						"default": "http://my-curtain.local/api/v1/pos/%d",
+						"format": "uri"
+					},
+					"method": {
+						"type": "string",
+						"required": false,
+						"default": "GET",
+						"typeahead": { "source": [ 
+							"GET", "PUT", "POST", "DELETE", "HEAD"
+						]}
+					}
+				}
+			},
+			"getTargetPosUrl": {
+				"type": "object",
+				"title": "Get Target Position URL",
+				"properties": {
+					"url": {
+						"type": "string",
+						"title": "URL",
+						"required": false,
+						"format": "uri"
+					},
+					"method": {
+						"type": "string",
+						"required": false,
+						"default": "GET",
+						"typeahead": { "source": [ 
+							"GET", "PUT", "POST", "DELETE", "HEAD"
+						]}
+					}
+				}
+			},
+			"identifyUrl": {
+				"type": "object",
+				"title": "HomeKit Identify URL",
+				"properties": {
+					"url": {
+						"type": "string",
+						"title": "URL",
+						"description": "Fill to support HomeKit identify request supported by (for example) the Eve Home app.",
+						"required": false,
 						"format": "uri"
 					},
 					"method": {
@@ -135,14 +181,82 @@
 	  },
 	  {
 		"type": "fieldset",
-		"title": "State retrieval",
+		"title": "Getters",
 		"expandable": true,
 		"flex-flow": "row wrap",
 		"displayFlex": true,
 		"flex-direction": "row",
 		"items": [
-			"getPositionStateUrl.url",
-			"getPositionStateUrl.method"
+			{
+				"type": "flex",
+				"flex-flow": "row wrap",
+				"title": "Get Current Position",
+				"items": [
+					"getCurrentPosUrl.url",
+					"getCurrentPosUrl.method",
+					"getCurrentPosUrl.body"
+				]
+			},
+			{
+				"type": "flex",
+				"flex-flow": "row wrap",
+				"title": "Get Target Position",
+				"items": [
+					"getTargetPosUrl.url",
+					"getTargetPosUrl.method"
+				]
+			},
+			{
+				"type": "flex",
+				"flex-flow": "row wrap",
+				"title": "Get Position State",
+				"items": [
+					"getPositionStateUrl.url",
+					"getPositionStateUrl.method"
+				]
+			}
+		]
+	  },
+
+	  {
+		"type": "fieldset",
+		"title": "Setters",
+		"expandable": true,
+		"flex-flow": "row wrap",
+		"displayFlex": true,
+		"flex-direction": "row",
+		"items": [
+			{
+				"type": "flex",
+				"flex-flow": "row wrap",
+				"title": "Set Target Position",
+				"items": [
+					"setTargetPosUrl.url",
+					"setTargetPosUrl.method"
+				]
+			}		
+		]
+	  },
+
+	  {
+		"type": "fieldset",
+		"title": "Advanced",
+		"expandable": true,
+		"flex-flow": "row wrap",
+		"displayFlex": true,
+		"flex-direction": "row",
+		"items": [
+			"debug",
+			{
+				"type": "flex",
+				"flex-flow": "row wrap",
+				"title": "Identify",
+				"items": [
+					"identifyUrl.url",
+					"identifyUrl.method"
+				]
+			},
+			"pullInterval"
 			
 		]
 	  }
