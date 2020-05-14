@@ -27,7 +27,8 @@
     }
   ],
   "dependencies": {
-    "homebridge-http-base": "1.0.0"
+    "homebridge-http-base": "2.0.0",
+    "semantic-release-cli": "^5.2.3"
   },
   "devDependencies": {
     "semantic-release": "^17.0.7"

@@ -83,9 +83,17 @@ function HttpCurtain(log, config) {
         this.pullTimer.start();
     }
 
-    /** @namespace config.notificationPassword */
-    /** @namespace config.notificationID */
-    notifications.enqueueNotificationRegistrationIfDefined(api, log, config.notificationID, config.notificationPassword, this.handleNotification.bind(this));
+
+    api.on('didFinishLaunching', function() {
+        // check if notificationRegistration is set, if not 'notificationRegistration' is probably not installed on the system
+        if (global.notificationRegistration && typeof global.notificationRegistration === "function") {
+            try {
+                global.notificationRegistration(config.notificationID, this.handleNotification.bind(this), config.notificationPassword);
+            } catch (error) {
+                // notificationID is already taken
+            }
+        }
+    }.bind(this));
 }
 
 HttpCurtain.prototype = {

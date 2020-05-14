@@ -1,0 +1,151 @@
+{
+	"pluginAlias": "HttpCurtain",
+	"pluginType": "accessory",
+	"singular": false,
+	"headerDisplay": "Integrate HTTP based curtain controllers. Supports push notifications via [homebridge-http-notification-server](https://github.com/Supereg/homebridge-http-notification-server).",
+	"footerDisplay": "",
+	"schema": {
+		"type": "object",
+		"properties": {
+			"name": {
+				"title": "Name",
+				"type": "string",
+				"required": true,
+				"default": "My Curtain"
+			},
+			"notificationID": {
+				"title": "Notification ID",
+				"type": "string",
+				"requred": false,
+				"default": "my-http-curtain"
+			},
+			"notificationPassword": {
+				"title": "Notification Password",
+				"type": "string",
+				"requred": false,
+				"default": ""
+			},
+			"getCurrentPosUrl": {
+				"type": "object",
+				"title": "Get Current Position URL",
+				"properties": {
+					"url": {
+						"type": "string",
+						"title": "URL",
+						"required": true,
+						"default": "http://my-curtain.local/api/v1/pos",
+						"format": "uri"
+					},
+					"method": {
+						"type": "string",
+						"required": false,
+						"default": "GET",
+						"typeahead": { "source": [ 
+							"GET", "PUT", "POST", "DELETE", "HEAD"
+						]}
+					}
+				}
+			},
+			"getPositionStateUrl": {
+				"type": "object",
+				"title": "Get Position State URL",
+				"properties": {
+					"url": {
+						"type": "string",
+						"title": "URL",
+						"required": false,
+						"default": "http://my-curtain.local/api/v1/state",
+						"format": "uri"
+					},
+					"method": {
+						"type": "string",
+						"required": false,
+						"default": "GET",
+						"typeahead": { "source": [ 
+							"GET", "PUT", "POST", "DELETE", "HEAD"
+						]}
+					}
+				}
+			},
+			"setTargetPosUrl": {
+				"type": "object",
+				"title": "Set Target Position URL",
+				"properties": {
+					"url": {
+						"type": "string",
+						"title": "URL",
+						"required": false,
+						"default": "http://my-curtain.local/api/v1/pos/%d",
+						"format": "uri"
+					},
+					"method": {
+						"type": "string",
+						"required": false,
+						"default": "GET",
+						"typeahead": { "source": [ 
+							"GET", "PUT", "POST", "DELETE", "HEAD"
+						]}
+					}
+				}
+			},
+			"pullInterval": {
+				"title": "Pull interval [ms]",
+				"type": "integer",
+				"description": "Leave empty to update position using push method only. Interval in milliseconds to pull position data from the curtain periodically. ",
+				"required": false,
+				"minimum": 0
+			},
+			"debug": {
+				"title": "Enable debug mode",
+				"type": "boolean",
+				"required": false,
+				"default": false
+			}
+		}
+	},
+	"layout": [
+	{
+    	"type": "flex",
+        "flex-flow": "row wrap",
+        "items": [
+        {
+        	"key": "name",
+            "type": "name"
+        }
+       ]
+	},
+	{
+		"type": "fieldset",
+		"title": "Notification Server",
+		"description": "Push notification configuration",
+		"expandable": true,
+		"flex-flow": "row wrap",
+		"displayFlex": true,
+		"flex-direction": "row",
+		"items": [
+		  {
+			  "key": "notificationID",
+			  "type": "notificationID"
+		  },
+		  {
+			"key": "notificationPassword",
+			"type": "notificationPassword"
+		  }
+		]
+	  },
+	  {
+		"type": "fieldset",
+		"title": "State retrieval",
+		"expandable": true,
+		"flex-flow": "row wrap",
+		"displayFlex": true,
+		"flex-direction": "row",
+		"items": [
+			"getPositionStateUrl.url",
+			"getPositionStateUrl.method"
+			
+		]
+	  }
+	
+	]
+}
