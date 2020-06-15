@@ -15,7 +15,6 @@ let Service, Characteristic, api;
 
 const configParser = require("homebridge-http-base").configParser;
 const http = require("homebridge-http-base").http;
-const notifications = require("homebridge-http-base").notifications;
 const PullTimer = require("homebridge-http-base").PullTimer;
 
 const PACKAGE_JSON = require('./package.json');
@@ -71,6 +70,8 @@ function HttpCurtain(log, config) {
     this.validateUrl('setTargetPosUrl', true);
     this.validateUrl('getTargetPosUrl');
     this.validateUrl('identifyUrl');
+    
+    this.getCurrentPosRegEx = config.getCurrentPosRegEx || '';
 
     this.homebridgeService = new Service.WindowCovering(this.name);
     
@@ -185,7 +186,16 @@ HttpCurtain.prototype = {
                 callback(new Error("Got http error code " + response.statusCode));
             }
             else {
+                if(this.getCurrentPosRegEx) {
+                    let matches = body.match(this.getCurrentPosRegEx);
+                    if(matches.length > 1) {
+                        body = matches[1]
+                        if (this.debug)
+                            this.log("Retrieving current position via regular expression. Match: %s", matches[0]);
+                    }
+                }
                 const posValue = parseInt(body);
+
                 if (this.debug)
                     this.log("Position value is currently at: %s\%", posValue);
 

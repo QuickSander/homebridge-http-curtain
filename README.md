@@ -47,12 +47,14 @@ The configuration can contain the following properties:
 * `name` \<string\> **required**: Defines the name which is later displayed in HomeKit
 * `getCurrentPosUrl` \<string | [urlObject](#urlobject)\> **required**: Defines the url
 (and other properties when using an urlObject) to query the current position from the curtain.
-It currently expects the http server to return a integer ranging from 0-100 (step 1) leaving out any html markup.
+It expects the http server to return a integer ranging from 0-100 (step 1) leaving out any html markup when no `getCurrentPosRegEx`
+is provided.
+* `getCurrentPosRegEx` \<string\> **optional**: A regular expression from which the first matched group determines the position.
 * `getPositionStateUrl` \<string | [urlObject](#urlobject)\> **optional**: Defines the url
 (and other properties when using an urlObject) to query the current state from the curtain.
 It expects the http server to return a integer '0' (Closing), '1' (Opening) or '2' (Idle) leaving out any html markup.
 Note that Homekit ignores this state as it rather compares _CurrentPosition_ with _TargetPosition_.
-* `setTargetPosUrl` \<string | [urlObject](#urlobject)\> **optional**: Defines the url
+* `setTargetPosUrl` \<string | [urlObject](#urlobject)\> **required**: Defines the url
 (and other properties when using an urlObject) to set the target position at the curtain.
 Any `%d` format specifier will be replaced by the requested target position.
 * `getTargetPosUrl` \<string | [urlObject](#urlobject)\> **optional**: Defines the url
