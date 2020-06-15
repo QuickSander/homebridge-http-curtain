@@ -50,6 +50,12 @@
 					}
 				}
 			},
+			"getCurrentPosRegEx": {
+				"title": "Get Current Position Regular Expression",
+				"type": "string",
+				"requred": false,
+				"default": ""
+			},
 			"getPositionStateUrl": {
 				"type": "object",
 				"title": "Get Position State URL",
@@ -183,9 +189,9 @@
 		"type": "fieldset",
 		"title": "Getters",
 		"expandable": true,
-		"flex-flow": "row wrap",
+		"flex-flow": "column wrap",
 		"displayFlex": true,
-		"flex-direction": "row",
+		"flex-direction": "column",
 		"items": [
 			{
 				"type": "flex",
@@ -197,6 +203,7 @@
 					"getCurrentPosUrl.body"
 				]
 			},
+			"getCurrentPosRegEx",
 			{
 				"type": "flex",
 				"flex-flow": "row wrap",
@@ -242,14 +249,15 @@
 		"type": "fieldset",
 		"title": "Advanced",
 		"expandable": true,
-		"flex-flow": "row wrap",
+		"flex-flow": "column wrap",
 		"displayFlex": true,
-		"flex-direction": "row",
+		"flex-direction": "column",
 		"items": [
 			"debug",
 			{
 				"type": "flex",
 				"flex-flow": "row wrap",
+				"flex-direction": "row",
 				"title": "Identify",
 				"items": [
 					"identifyUrl.url",
