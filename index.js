@@ -188,10 +188,13 @@ HttpCurtain.prototype = {
             else {
                 if(this.getCurrentPosRegEx) {
                     let matches = body.match(this.getCurrentPosRegEx);
-                    if(matches.length > 1) {
-                        body = matches[1]
+                    if(matches && matches.length > 1) {
+                        body = matches[1];
                         if (this.debug)
                             this.log("Retrieving current position via regular expression. Match: %s", matches[0]);
+                    }
+                    else {
+                        this.log("Your regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getCurrentPosRegEx, body);
                     }
                 }
                 const posValue = parseInt(body);
