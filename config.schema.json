@@ -119,6 +119,12 @@
 					}
 				}
 			},
+			"getTargetPosRegEx": {
+				"title": "Get Target Position Regular Expression",
+				"type": "string",
+				"requred": false,
+				"default": ""
+			},
 			"identifyUrl": {
 				"type": "object",
 				"title": "HomeKit Identify URL",
@@ -213,6 +219,7 @@
 					"getTargetPosUrl.method"
 				]
 			},
+			"getTargetPosRegEx",
 			{
 				"type": "flex",
 				"flex-flow": "row wrap",

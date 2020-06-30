@@ -72,6 +72,7 @@ function HttpCurtain(log, config) {
     this.validateUrl('identifyUrl');
     
     this.getCurrentPosRegEx = config.getCurrentPosRegEx || '';
+    this.getTargetPosRegEx = config.getTargetPosRegEx || '';
 
     this.homebridgeService = new Service.WindowCovering(this.name);
     
@@ -194,7 +195,7 @@ HttpCurtain.prototype = {
                             this.log("Retrieving current position via regular expression. Match: %s", matches[0]);
                     }
                     else {
-                        this.log("Your regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getCurrentPosRegEx, body);
+                        this.log("Your CurrentPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getCurrentPosRegEx, body);
                     }
                 }
                 const posValue = parseInt(body);
@@ -272,6 +273,18 @@ HttpCurtain.prototype = {
                     callback(new Error("Got http error code " + response.statusCode));
                 }
                 else {
+                    if(this.getTargetPosRegEx) {
+                        let matches = body.match(this.getTargetPosRegEx);
+                        if(matches && matches.length > 1) {
+                            body = matches[1];
+                            if (this.debug)
+                                this.log("Retrieving target position via regular expression. Match: %s", matches[0]);
+                        }
+                        else {
+                            this.log("Your TargetPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getTargetPosRegEx, body);
+                        }
+                    }
+
                     const targetPosition = parseInt(body);
                     if (this.debug)
                         this.log("Target position retrieved via http: %s\%", targetPosition);

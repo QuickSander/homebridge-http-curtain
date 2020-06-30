@@ -49,7 +49,7 @@ The configuration can contain the following properties:
 (and other properties when using an urlObject) to query the current position from the curtain.
 It expects the http server to return a integer ranging from 0-100 (step 1) leaving out any html markup when no `getCurrentPosRegEx`
 is provided.
-* `getCurrentPosRegEx` \<string\> **optional**: A regular expression from which the first matched group determines the position.
+* `getCurrentPosRegEx` \<string\> **optional**: A regular expression from which the first matched group determines the current position.
 * `getPositionStateUrl` \<string | [urlObject](#urlobject)\> **optional**: Defines the url
 (and other properties when using an urlObject) to query the current state from the curtain.
 It expects the http server to return a integer '0' (Closing), '1' (Opening) or '2' (Idle) leaving out any html markup.
@@ -59,6 +59,7 @@ Note that Homekit ignores this state as it rather compares _CurrentPosition_ wit
 Any `%d` format specifier will be replaced by the requested target position.
 * `getTargetPosUrl` \<string | [urlObject](#urlobject)\> **optional**: Defines the url
 (and other properties when using an urlObject) to retrieve the target position at the curtain.
+* `getTargetPosRegEx` \<string\> **optional**: A regular expression from which the first matched group determines the target position.
 * `identifyUrl` \<string | [urlObject](#urlobject)\> **optional**: URL to call when the HomeKit identify action is requested.
 * `pullInterval` \<integer\> **optional**: The property expects an interval in **milliseconds** in which the plugin
 pulls updates from your http device. For more information read [pulling updates](#the-pull-way).  
