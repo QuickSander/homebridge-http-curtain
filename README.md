@@ -4,11 +4,16 @@
 
 # homebridge-http-curtain
 
-This [Homebridge](https://github.com/nfarina/homebridge) plugin can be used to integrate your curtain which has a HTTP api into HomeKit. This controller supports push notification _without_ the need for HomeBridge to periodically pull the curtain position value. There are a few other http based curtain / window blinds
+This [Homebridge](https://github.com/nfarina/homebridge) plugin can be used to integrate your curtain which has an HTTP api into HomeKit. This controller supports push notification _without_ the need for HomeBridge to periodically pull the curtain position value. There are a few other HTTP based curtain / window blinds
 plugins available, but I have not found any yet that does not poll the curtain controller continuously for position or state updates.
 
 _This is a fork of Supereg's [homebridge-http-temperature-sensor](https://github.com/Supereg/homebridge-http-temperature-sensor) modified to function as an curtain controller._
 
+Features:
+* Set target position (0-100).
+* Position change updates: push (efficient / less network and Homebridge load) or pull (easy to configure).
+* Retrieve current position.
+* Send identify request (via Eve Home app) to locate your curtain
 
 ## Installation
 
@@ -29,12 +34,12 @@ HomeKit controller of state changes.
 #### The 'pull' way:
 
 The 'pull' way is probably the easiest to set up and supported in every scenario. `homebridge-http-curtain`
-requests the value of the sensor in an specified interval (pulling) and sends the value to HomeKit.  
+requests the value of the curtain/window blind in an specified interval (pulling) and sends the value to HomeKit.  
 Look for `pullInterval` in the list of configuration options if you want to configure it.
 
 #### The 'push' way:
 
-When using the 'push' concept the http device itself sends the updated value itself to `homebridge-http-curtain`
+When using the 'push' concept the HTTP device itself sends the updated value itself to `homebridge-http-curtain`
 whenever the value changes. This is more efficient as the new value is updated instantly and
 `homebridge-http-curtain` does not need to make needless requests when the value didn't actually change.
 However because the http device needs to actively notify the `homebridge-http-curtain` plugin there is more
