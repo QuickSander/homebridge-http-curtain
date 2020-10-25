@@ -24,7 +24,7 @@ sudo npm install -g homebridge-http-curtain
 
 The _'CurrentPosition'_ characteristic from the _'WindowCovering'_ service has the permission to `notify` the
 HomeKit controller of state changes.
-`homebridge-http-curtain` supports two ways to position changes to HomeKit.
+`homebridge-http-curtain` supports two ways to send window blinds/curtain position changes to HomeKit.
 
 #### The 'pull' way:
 
