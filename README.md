@@ -129,9 +129,9 @@ Below is an example of an urlObject containing all properties:
 
 `homebridge-http-curtain` can be used together with
 [homebridge-http-notification-server](https://github.com/Supereg/homebridge-http-notification-server) in order to receive
-updates when the state changes at your external program. For details on how to implement those updates and how to
+updates when the state changes at your home automation device. For details on how to implement those updates and how to
 install and configure `homebridge-http-notification-server`, please refer to the
-[README](https://github.com/Supereg/homebridge-http-notification-server) of the repository.
+[README](https://github.com/Supereg/homebridge-http-notification-server) of that repository.
 
 Down here is an example on how to configure `homebridge-http-curtain` to work with your implementation of the
 `homebridge-http-notification-server`.
