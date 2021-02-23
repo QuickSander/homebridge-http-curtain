@@ -69,6 +69,7 @@ function HttpCurtain(log, config) {
     this.validateUrl('getPositionStateUrl');
     this.validateUrl('setTargetPosUrl', true);
     this.validateUrl('getTargetPosUrl');
+    this.validateUrl('getPositionStateUrl');
     this.validateUrl('identifyUrl');
     
     this.getCurrentPosRegEx = config.getCurrentPosRegEx || '';
@@ -143,10 +144,9 @@ HttpCurtain.prototype = {
             .on("get", this.getPositionState.bind(this));
 
         this.homebridgeService
-			.getCharacteristic(Characteristic.TargetPosition)
-			.on('get', this.getTargetPosition.bind(this))
-			.on('set', this.setTargetPosition.bind(this));
-
+            .getCharacteristic(Characteristic.TargetPosition)
+            .on('get', this.getTargetPosition.bind(this))
+            .on('set', this.setTargetPosition.bind(this));
 
         return [informationService, this.homebridgeService];
     },
@@ -154,7 +154,6 @@ HttpCurtain.prototype = {
     handleNotification: function(body) {
         const value = body.value;
 
-        /** @namespace body.characteristic */
         let characteristic;
         switch (body.characteristic) {
             case "CurrentPosition":
@@ -164,7 +163,7 @@ HttpCurtain.prototype = {
                 characteristic = Characteristic.PositionState;
                 break;
             default:
-                this.log("Encountered unknown characteristic handling notification: " + body.characteristic);
+                this.log.warn("Encountered unknown characteristic handling notification: " + body.characteristic);
                 return;
         }
 
@@ -179,11 +178,11 @@ HttpCurtain.prototype = {
                 this.pullTimer.resetTimer();
 
             if (error) {
-                this.log("getCurrentPosition() failed: %s", error.message);
+                this.log.error("getCurrentPosition() failed: %s", error.message);
                 callback(error);
             }
             else if (response.statusCode !== 200) {
-                this.log("getCurrentPosition() returned http error: %s", response.statusCode);
+                this.log.error("getCurrentPosition() returned http error: %s", response.statusCode);
                 callback(new Error("Got http error code " + response.statusCode));
             }
             else {
@@ -195,7 +194,7 @@ HttpCurtain.prototype = {
                             this.log("Retrieving current position via regular expression. Match: %s", matches[0]);
                     }
                     else {
-                        this.log("Your CurrentPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getCurrentPosRegEx, body);
+                        this.log.warn("Your CurrentPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getCurrentPosRegEx, body);
                     }
                 }
                 const posValue = parseInt(body);
@@ -216,11 +215,11 @@ HttpCurtain.prototype = {
                     this.pullTimer.resetTimer();
 
                 if (error) {
-                    this.log("getPositionState() failed: %s", error.message);
+                    this.log.error("getPositionState() failed: %s", error.message);
                     callback(error);
                 }
                 else if (response.statusCode !== 200) {
-                    this.log("getPositionState() returned http error: %s", response.statusCode);
+                    this.log.error("getPositionState() returned http error: %s", response.statusCode);
                     callback(new Error("Got http error code " + response.statusCode));
                 }
                 else {
@@ -231,6 +230,10 @@ HttpCurtain.prototype = {
                     callback(null, state);
                 }
             });
+        } else {
+           if (this.debug)
+               this.log("Position state URL not configured. Returning: 2 (Stopped)");
+           callback(null, 2); // No state defined.
         }
     },
 
@@ -245,11 +248,11 @@ HttpCurtain.prototype = {
 
         http.httpRequest(urlObj, (error, response, body) => {
             if (error) {
-                this.log("setTargetPositionUrl() failed: %s", error.message);
+                this.log.error("setTargetPositionUrl() failed: %s", error.message);
                 callback(error);
             }
             else if (response.statusCode !== 200) {
-                this.log("setTargetPositionUrl() returned http error: %s; body: %s", response.statusCode), body;
+                this.log.error("setTargetPositionUrl() returned http error: %s; body: %s", response.statusCode), body;
                 callback(new Error("Got http error code " + response.statusCode));
             }
             else {
@@ -265,11 +268,11 @@ HttpCurtain.prototype = {
         if (this.getTargetPosUrl) { // Target position URL is optional
             http.httpRequest(this.getTargetPosUrl, (error, response, body) => {
                 if (error) {
-                    this.log("getTargetPosition() failed: %s", error.message);
+                    this.log.error("getTargetPosition() failed: %s", error.message);
                     callback(error);
                 }
                 else if (response.statusCode !== 200) {
-                    this.log("getTargetPosition() returned http error: %s", response.statusCode);
+                    this.log.error("getTargetPosition() returned http error: %s", response.statusCode);
                     callback(new Error("Got http error code " + response.statusCode));
                 }
                 else {
@@ -281,7 +284,7 @@ HttpCurtain.prototype = {
                                 this.log("Retrieving target position via regular expression. Match: %s", matches[0]);
                         }
                         else {
-                            this.log("Your TargetPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getTargetPosRegEx, body);
+                            this.log,warn("Your TargetPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getTargetPosRegEx, body);
                         }
                     }
 
@@ -295,7 +298,7 @@ HttpCurtain.prototype = {
         }
         else
         {
-            this.log("Target position retrived from cache: %s\%", this.targetPosition);
+            this.log("Target position retrieved from cache: %s\%", this.targetPosition);
             callback(null, this.targetPosition);
         }
     },
