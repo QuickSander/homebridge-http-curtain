@@ -232,8 +232,8 @@ HttpCurtain.prototype = {
             });
         } else {
            if (this.debug)
-               this.log("Position state URL not configured. Returning: 2 (Stopped)");
-           callback(null, 2); // No state defined.
+               this.log("Position state URL not configured. Returning: Stopped ("+Characteristic.PositionState.STOPPED+")");
+           callback(null, Characteristic.PositionState.STOPPED); // No state defined.
         }
     },
 
