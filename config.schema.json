@@ -152,12 +152,6 @@
 				"description": "Leave empty to update position using push method only. Interval in milliseconds to pull position data from the curtain periodically. ",
 				"required": false,
 				"minimum": 0
-			},
-			"debug": {
-				"title": "Enable debug mode",
-				"type": "boolean",
-				"required": false,
-				"default": false
 			}
 		}
 	},
@@ -260,7 +254,6 @@
 		"displayFlex": true,
 		"flex-direction": "column",
 		"items": [
-			"debug",
 			{
 				"type": "flex",
 				"flex-flow": "row wrap",
