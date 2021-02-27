@@ -44,7 +44,6 @@ module.exports = function (homebridge) {
 function HttpCurtain(log, config) {
     this.log = log;
     this.name = config.name;
-    this.debug = config.debug || false;
 
     this.targetPosition = 0;
 
@@ -77,8 +76,6 @@ function HttpCurtain(log, config) {
 
     this.homebridgeService = new Service.WindowCovering(this.name);
     
-
-    /** @namespace config.pullInterval */
     if (config.pullInterval) {
         this.pullTimer = new PullTimer(log, config.pullInterval, this.getCurrentPosition.bind(this), value => {
             this.homebridgeService.setCharacteristic(Characteristic.CurrentPosition, value);
@@ -86,14 +83,13 @@ function HttpCurtain(log, config) {
         this.pullTimer.start();
     }
 
-
     api.on('didFinishLaunching', function() {
-        // check if notificationRegistration is set, if not 'notificationRegistration' is probably not installed on the system
+        // Check if notificationRegistration is set, if not 'notificationRegistration' is probably not installed on the system.
         if (global.notificationRegistration && typeof global.notificationRegistration === "function") {
             try {
                 global.notificationRegistration(config.notificationID, this.handleNotification.bind(this), config.notificationPassword);
             } catch (error) {
-                // notificationID is already taken
+                // notificationID is already taken.
             }
         }
     }.bind(this));
@@ -102,17 +98,17 @@ function HttpCurtain(log, config) {
 HttpCurtain.prototype = {
 
     identify: function (callback) {
-      this.log("Identify requested!");
+      this.log.info("Identify requested");
 
       if (this.identifyUrl) {
          http.httpRequest(this.identifyUrl, (error, response, body) => {
 
              if (error) {
-                this.log("identify() failed: %s", error.message);
+                this.log.error("identify() failed: %s", error.message);
                 callback(error);
              }
              else if (response.statusCode !== 200) {
-                this.log("identify() returned http error: %s", response.statusCode);
+                this.log.error("identify() returned http error: %s", response.statusCode);
                 callback(new Error("Got http error code " + response.statusCode));
              }
              else {
@@ -167,8 +163,7 @@ HttpCurtain.prototype = {
                 return;
         }
 
-        if (this.debug)
-            this.log("Updating '" + body.characteristic + "' to new value: " + body.value);
+        this.log.debug("Update received from device: " + body.characteristic + ": " + body.value);
         this.homebridgeService.setCharacteristic(characteristic, value);
     },
 
@@ -190,8 +185,7 @@ HttpCurtain.prototype = {
                     let matches = body.match(this.getCurrentPosRegEx);
                     if(matches && matches.length > 1) {
                         body = matches[1];
-                        if (this.debug)
-                            this.log("Retrieving current position via regular expression. Match: %s", matches[0]);
+                        this.log.debug("Retrieving current position via regular expression. Full ungrouped match: %s", matches[0]);
                     }
                     else {
                         this.log.warn("Your CurrentPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getCurrentPosRegEx, body);
@@ -199,8 +193,7 @@ HttpCurtain.prototype = {
                 }
                 const posValue = parseInt(body);
 
-                if (this.debug)
-                    this.log("Position value is currently at: %s\%", posValue);
+                this.log.info("Current position: %s\%", posValue);
 
                 callback(null, posValue);
             }
@@ -224,15 +217,13 @@ HttpCurtain.prototype = {
                 }
                 else {
                     const state = parseInt(body);
-                    if (this.debug)
-                        this.log("Position state is %s", state);
+                    this.log.info("Position state: %s", state);
 
                     callback(null, state);
                 }
             });
         } else {
-           if (this.debug)
-               this.log("Position state URL not configured. Returning: Stopped ("+Characteristic.PositionState.STOPPED+")");
+           this.log.debug("Position state URL not configured. Returning: Stopped ("+Characteristic.PositionState.STOPPED+")");
            callback(null, Characteristic.PositionState.STOPPED); // No state defined.
         }
     },
@@ -243,8 +234,7 @@ HttpCurtain.prototype = {
         // Replace %d with target position.
         let urlObj = {...this.setTargetPosUrl}; 
         urlObj.url = urlObj.url.replace(/%d/g, value.toString());
-        if (this.debug)
-            this.log("Requesting: %s for value: %d", urlObj.url, value);
+        this.log.info("Requesting: %s for value: %d", urlObj.url, value);
 
         http.httpRequest(urlObj, (error, response, body) => {
             if (error) {
@@ -256,8 +246,7 @@ HttpCurtain.prototype = {
                 callback(new Error("Got http error code " + response.statusCode));
             }
             else {
-                if (this.debug)
-                    this.log("Succesfully requested target position: %d\%", this.targetPosition);
+                this.log.debug("Succesfully requested target position: %d\%", this.targetPosition);
 
                 callback(null);
             }
@@ -280,17 +269,15 @@ HttpCurtain.prototype = {
                         let matches = body.match(this.getTargetPosRegEx);
                         if(matches && matches.length > 1) {
                             body = matches[1];
-                            if (this.debug)
-                                this.log("Retrieving target position via regular expression. Match: %s", matches[0]);
+                            this.log.debug("Retrieving target position via regular expression. Full ungrouped match: %s", matches[0]);
                         }
                         else {
-                            this.log,warn("Your TargetPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getTargetPosRegEx, body);
+                            this.log.warn("Your TargetPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getTargetPosRegEx, body);
                         }
                     }
 
                     const targetPosition = parseInt(body);
-                    if (this.debug)
-                        this.log("Target position retrieved via http: %s\%", targetPosition);
+                    this.log.info("Target position (retrieved via http): %s\%", targetPosition);
 
                     callback(null, targetPosition);
                 }
@@ -298,7 +285,7 @@ HttpCurtain.prototype = {
         }
         else
         {
-            this.log("Target position retrieved from cache: %s\%", this.targetPosition);
+            this.log.info("Target position (retrieved from cache): %s\%", this.targetPosition);
             callback(null, this.targetPosition);
         }
     },
