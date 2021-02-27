@@ -69,8 +69,6 @@ Any `%d` format specifier will be replaced by the requested target position.
 * `identifyUrl` \<string | [urlObject](#urlobject)\> **optional**: URL to call when the HomeKit identify action is requested.
 * `pullInterval` \<integer\> **optional**: The property expects an interval in **milliseconds** in which the plugin
 pulls updates from your http device. For more information read [pulling updates](#the-pull-way).  
-* `debug` \<boolean\> **optional**: Enable debug mode and write more logs.
-
 
 Below is an example configuration. One URL is using a simple string URL and the other is using an urlObject.  
 Both configs can be used for a basic plugin configuration.
