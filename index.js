@@ -83,6 +83,8 @@ function HttpCurtain(log, config) {
         this.pullTimer.start();
     }
 
+    this.invertPosition = config.invertPosition || false
+
     api.on('didFinishLaunching', function() {
         // Check if notificationRegistration is set, if not 'notificationRegistration' is probably not installed on the system.
         if (global.notificationRegistration && typeof global.notificationRegistration === "function") {
@@ -191,9 +193,12 @@ HttpCurtain.prototype = {
                         this.log.warn("Your CurrentPosRegEx regular expression: \"%s\" did not match any part of the returned body: \"%s\"", this.getCurrentPosRegEx, body);
                     }
                 }
-                const posValue = parseInt(body);
+                let posValue = parseInt(body);
+                this.log.info("Current position (retrieved via http): %s\%", posValue);
 
-                this.log.info("Current position: %s\%", posValue);
+                if (this.invertPosition) {
+                    posValue = 100 - posValue;
+                }
 
                 callback(null, posValue);
             }
@@ -231,6 +236,10 @@ HttpCurtain.prototype = {
     setTargetPosition: function (value, callback) {
         this.targetPosition = value;
 
+        if (this.invertPosition) {
+            value = 100 - value;
+        }
+
         // Replace %d with target position.
         let urlObj = {...this.setTargetPosUrl}; 
         urlObj.url = urlObj.url.replace(/%d/g, value.toString());
@@ -246,7 +255,7 @@ HttpCurtain.prototype = {
                 callback(new Error("Got http error code " + response.statusCode));
             }
             else {
-                this.log.debug("Succesfully requested target position: %d\%", this.targetPosition);
+                this.log.debug("Succesfully requested target position: %d\%", value);
 
                 callback(null);
             }
@@ -276,8 +285,12 @@ HttpCurtain.prototype = {
                         }
                     }
 
-                    const targetPosition = parseInt(body);
+                    let targetPosition = parseInt(body);
                     this.log.info("Target position (retrieved via http): %s\%", targetPosition);
+
+                    if (this.invertPosition) {
+                        targetPosition = 100 - targetPosition;
+                    }
 
                     callback(null, targetPosition);
                 }

@@ -152,6 +152,12 @@
 				"description": "Leave empty to update position using push method only. Interval in milliseconds to pull position data from the curtain periodically. ",
 				"required": false,
 				"minimum": 0
+			},
+			"invertPosition": {
+				"title": "Invert position value",
+				"type": "boolean",
+				"description": "When selected will interpret 0% as fully opened and 100% as fully closed.",
+				"required": false
 			}
 		}
 	},
@@ -264,7 +270,8 @@
 					"identifyUrl.method"
 				]
 			},
-			"pullInterval"
+			"pullInterval",
+			"invertPosition"
 			
 		]
 	  }

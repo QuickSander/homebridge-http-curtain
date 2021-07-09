@@ -14,7 +14,7 @@ Features:
 * Set target position (0-100).
 * Position change updates: push (efficient / less network and Homebridge load) or pull (easy to configure).
 * Retrieve current position.
-* Send identify request (via Eve Home app) to locate your curtain
+* Send identify request (via Eve Home app) to locate your curtain.
 
 ## Installation
 
@@ -68,7 +68,8 @@ Any `%d` format specifier will be replaced by the requested target position.
 * `getTargetPosRegEx` \<string\> **optional**: A regular expression from which the first matched group determines the target position.
 * `identifyUrl` \<string | [urlObject](#urlobject)\> **optional**: URL to call when the HomeKit identify action is requested.
 * `pullInterval` \<integer\> **optional**: The property expects an interval in **milliseconds** in which the plugin
-pulls updates from your http device. For more information read [pulling updates](#the-pull-way).  
+pulls updates from your http device. For more information read [pulling updates](#the-pull-way). 
+* `invertPosition` \<boolean\> **optional**: True: interpret 0% as fully open and 100% as fully closed.
 
 Below is an example configuration. One URL is using a simple string URL and the other is using an urlObject.  
 Both configs can be used for a basic plugin configuration.
