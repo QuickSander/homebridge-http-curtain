@@ -243,6 +243,7 @@ HttpCurtain.prototype = {
         // Replace %d with target position.
         let urlObj = {...this.setTargetPosUrl}; 
         urlObj.url = urlObj.url.replace(/%d/g, value.toString());
+        urlObj.body = urlObj.body.replace(/%d/g, value.toString());
         this.log.info("Requesting: %s for value: %d", urlObj.url, value);
 
         http.httpRequest(urlObj, (error, response, body) => {
