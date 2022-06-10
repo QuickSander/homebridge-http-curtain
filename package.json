@@ -30,7 +30,7 @@
     "homebridge-http-base": "^2.1.8"
   },
   "devDependencies": {
-    "semantic-release": "^17.0.8",
+    "semantic-release": "^19.0.3",
     "semantic-release-cli": "^5.3.1"
   },
   "scripts": {
